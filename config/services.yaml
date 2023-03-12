@@ -19,6 +19,19 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\Service\AlbumService:
+        class: App\Service\AlbumService
+        arguments:
+          $itune_service: '@App\Service\ItuneAPIService'
+    App\Service\ItuneAPIService:
+        class: App\Service\ItuneAPIService
+        arguments:
+          $client: '@GuzzleClient'
+    GuzzleClient:
+        class: \GuzzleHttp\Client
+        arguments:
+            $config:
+                base_uri: 'https://itunes.apple.com'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

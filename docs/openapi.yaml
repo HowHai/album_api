@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  title: 'Albums API'
+  description: 'Albums API'
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: howhmn@gmail.com
+  version: 1.0.0
+servers:
+  -
+    url: 'https://{host}'
+    variables:
+      host:
+        default: http://localhost:88
+        description: 'Local devevelopment'
+paths:
+  /albums:
+    get:
+      summary: 'Get a list of albums'
+      description: 'Get a list of albums'
+      operationId: getAlbums
+      parameters:
+        -
+          name: limit
+          in: query
+          description: 'Maximum number of albums to return'
+          schema:
+            type: integer
+          example: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+components:
+  schemas:
+    AlbumResponse:
+      title: AlbumResponse
+      description: ''
+      properties:
+        data:
+          type: array
+          items:
+            properties:
+              title:
+                type: string
+    BadRequestResponse:
+      title: BadRequestResponse
+      description: ''
+      properties:
+        errors:
+          type: array
+          items:
+            properties:
+              source:
+                type: string
+              detail:
+                type: string
