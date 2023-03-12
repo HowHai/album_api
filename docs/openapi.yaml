@@ -24,9 +24,34 @@ paths:
           name: limit
           in: query
           description: 'Maximum number of albums to return'
+          required: false
           schema:
             type: integer
+            default: 100
           example: 100
+        -
+          name: source
+          in: query
+          description: 'Source of data to fetch albums from'
+          required: false
+          schema:
+            type: string
+            default: itune
+            enum:
+                - itune
+                - database
+          example: itune
+        -
+          name: sort
+          in: query
+          description: 'Sort option'
+          required: false
+          schema:
+            type: string
+            default: title
+            enum:
+                - title
+          example: title
       responses:
         '200':
           description: OK

@@ -20,10 +20,16 @@ class AlbumController extends AbstractController
     {
         $request_dto = new AlbumDTORequest();
         $request_dto->setLimit($request->query->get('limit', AlbumService::MAXIMUM_NUMBER_OF_ALBUMS));
+        $request_dto->setSource($request->query->get('source', AlbumService::SOURCE_ITUNE));
+        $request_dto->setSort($request->query->get('sort', ''));
 
         $errors = $validator->validate($request_dto);
         if (count($errors) === 0) {
-            $albums = $album_service->getAlbums($request_dto->getLimit());
+            $albums = $album_service->getAlbums(
+                $request_dto->getLimit(),
+                $request_dto->getSource(),
+                $request_dto->getSort()
+            );
             return $this->json(['data' => $albums]);
         } else {
             return $this->json(

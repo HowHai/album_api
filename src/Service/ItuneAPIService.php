@@ -5,6 +5,7 @@ namespace App\Service;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 use App\DTO\AlbumDTOResponse;
+use App\Service\AlbumService;
 
 class ItuneAPIServiceServerError extends \Exception
 {
@@ -27,11 +28,12 @@ class ItuneAPIService
      * Return a list of albums
      *
      * @param int $limit Maximum number of albums to return
+     * @param string $sort Sort option
      *
      * @throws ItuneAPIServiceServerError
      * @return array
      */
-    public function getAlbums(int $limit): array
+    public function getAlbums(int $limit, string $sort = ''): array
     {
         $albums = [];
 
@@ -51,6 +53,10 @@ class ItuneAPIService
         } catch (RequestException $e) {
             throw new ItuneAPIServiceServerError('something went wrong.');
         }
+        if ($sort === AlbumService::SORT_BY_TITLE) {
+            usort($albums, function($a, $b) {return strcmp($a->getTitle(), $b->getTitle());});
+        }
+
         return $albums;
     }
 }
