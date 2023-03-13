@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 
+#[Route('/api', name: 'api_')]
 class AlbumController extends AbstractController
 {
     const BAD_REQUEST_STATUS_CODE = 400;

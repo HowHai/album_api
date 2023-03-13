@@ -12,9 +12,9 @@ servers:
     variables:
       host:
         default: http://localhost:88
-        description: 'Local devevelopment'
+description: 'Local devevelopment'
 paths:
-  /albums:
+  /api/albums:
     get:
       summary: 'Get a list of albums'
       description: 'Get a list of albums'
@@ -66,6 +66,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     post:
+      security:
+        - bearerAuth: []
       summary: 'Create an album'
       description: 'Create an album'
       operationId: createAlbum
@@ -94,8 +96,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  '/albums/{id}':
+        '401':
+          description: AUTHENTICATION_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+  '/api/albums/{id}':
     put:
+      security:
+        - bearerAuth: []
       summary: 'Update an album'
       description: 'Update an album'
       operationId: updateAlbum
@@ -132,7 +142,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          description: AUTHENTICATION_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
     delete:
+      security:
+        - bearerAuth: []
       summary: 'Delete an album'
       description: 'Delete an album'
       operationId: deleteAlbum
@@ -159,8 +177,98 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          description: AUTHENTICATION_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+  /api/register:
+    post:
+      summary: 'Create new user'
+      description: 'Create new user'
+      operationId: register
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: username
+                password:
+                  type: string
+                  example: password123
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /login_check:
+    post:
+      summary: 'Get authentication token'
+      description: 'Get authentication token'
+      operationId: getToken
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: username
+                password:
+                  type: string
+                  example: password
+              type: object
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                properties:
+                  token: { type: string }
+                type: object
+        '400':
+          $ref: '#/components/schemas/BadRequestError'
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
+    AuthenticationError:
+      description: 'Authentication error'
+      properties:
+        code:
+          type: integer
+          nullable: true
+        message:
+          type: string
+      example:
+        code: 401
+        message: 'Token not found or Invalid JWT token or JWT token expired'
     AlbumResponse:
       title: AlbumResponse
       description: ''
@@ -183,3 +291,19 @@ components:
                 type: string
               detail:
                 type: string
+    UserResponse:
+      title: UserResponse
+      description: ''
+      properties:
+        data:
+          type: array
+          items:
+            properties:
+              id:
+                type: integer
+              username:
+                type: string
+              password:
+                type: string
+              roles:
+                type: array
