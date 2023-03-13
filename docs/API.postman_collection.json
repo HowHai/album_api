@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "e36fbf18-e5d8-4586-a791-2fe4bca382fd",
+		"name": "Album API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Albums",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:88/api/albums?limit=10&source=not_itune&sort=title",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "88",
+					"path": [
+						"api",
+						"albums"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "source",
+							"value": "not_itune"
+						},
+						{
+							"key": "sort",
+							"value": "title"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create albums",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Hai1\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:88/api/albums",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "88",
+					"path": [
+						"api",
+						"albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register new user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"haii\",\n    \"password\": \"abc123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:88/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "88",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"data = JSON.parse(responseBody)",
+							"pm.globals.set(\"jwt_token\", data['token'])"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"hai\",\n    \"password\": \"abc123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:88/api/login_check",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "88",
+					"path": [
+						"api",
+						"login_check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"aa1aawaaa\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:88/api/albums/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "88",
+					"path": [
+						"api",
+						"albums",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:88/api/albums/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "88",
+					"path": [
+						"api",
+						"albums",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
