@@ -65,6 +65,100 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+    post:
+      summary: 'Create an album'
+      description: 'Create an album'
+      operationId: createAlbum
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                  example: 'All eyez on me'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  '/albums/{id}':
+    put:
+      summary: 'Update an album'
+      description: 'Update an album'
+      operationId: updateAlbum
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID of album to update'
+          required: true
+          schema:
+            type: integer
+            default: 1
+          example: 1
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  example: 'All eyez on me'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: 'Delete an album'
+      description: 'Delete an album'
+      operationId: deleteAlbum
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID of album to delete'
+          required: true
+          schema:
+            type: integer
+            default: 1
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 components:
   schemas:
     AlbumResponse:
