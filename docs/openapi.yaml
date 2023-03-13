@@ -1,0 +1,309 @@
+openapi: 3.0.0
+info:
+  title: 'Albums API'
+  description: 'Albums API'
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: howhmn@gmail.com
+  version: 1.0.0
+servers:
+  -
+    url: 'https://{host}'
+    variables:
+      host:
+        default: http://localhost:88
+description: 'Local devevelopment'
+paths:
+  /api/albums:
+    get:
+      summary: 'Get a list of albums'
+      description: 'Get a list of albums'
+      operationId: getAlbums
+      parameters:
+        -
+          name: limit
+          in: query
+          description: 'Maximum number of albums to return'
+          required: false
+          schema:
+            type: integer
+            default: 100
+          example: 100
+        -
+          name: source
+          in: query
+          description: 'Source of data to fetch albums from'
+          required: false
+          schema:
+            type: string
+            default: itune
+            enum:
+                - itune
+                - database
+          example: itune
+        -
+          name: sort
+          in: query
+          description: 'Sort option'
+          required: false
+          schema:
+            type: string
+            default: title
+            enum:
+                - title
+          example: title
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    post:
+      security:
+        - bearerAuth: []
+      summary: 'Create an album'
+      description: 'Create an album'
+      operationId: createAlbum
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                  example: 'All eyez on me'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          description: AUTHENTICATION_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+  '/api/albums/{id}':
+    put:
+      security:
+        - bearerAuth: []
+      summary: 'Update an album'
+      description: 'Update an album'
+      operationId: updateAlbum
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID of album to update'
+          required: true
+          schema:
+            type: integer
+            default: 1
+          example: 1
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  example: 'All eyez on me'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          description: AUTHENTICATION_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+    delete:
+      security:
+        - bearerAuth: []
+      summary: 'Delete an album'
+      description: 'Delete an album'
+      operationId: deleteAlbum
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID of album to delete'
+          required: true
+          schema:
+            type: integer
+            default: 1
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          description: AUTHENTICATION_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+  /api/register:
+    post:
+      summary: 'Create new user'
+      description: 'Create new user'
+      operationId: register
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: username
+                password:
+                  type: string
+                  example: password123
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /login_check:
+    post:
+      summary: 'Get authentication token'
+      description: 'Get authentication token'
+      operationId: getToken
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: username
+                password:
+                  type: string
+                  example: password
+              type: object
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                properties:
+                  token: { type: string }
+                type: object
+        '400':
+          $ref: '#/components/schemas/BadRequestError'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuthenticationError:
+      description: 'Authentication error'
+      properties:
+        code:
+          type: integer
+          nullable: true
+        message:
+          type: string
+      example:
+        code: 401
+        message: 'Token not found or Invalid JWT token or JWT token expired'
+    AlbumResponse:
+      title: AlbumResponse
+      description: ''
+      properties:
+        data:
+          type: array
+          items:
+            properties:
+              title:
+                type: string
+    BadRequestResponse:
+      title: BadRequestResponse
+      description: ''
+      properties:
+        errors:
+          type: array
+          items:
+            properties:
+              source:
+                type: string
+              detail:
+                type: string
+    UserResponse:
+      title: UserResponse
+      description: ''
+      properties:
+        data:
+          type: array
+          items:
+            properties:
+              id:
+                type: integer
+              username:
+                type: string
+              password:
+                type: string
+              roles:
+                type: array
